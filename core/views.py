@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.core.mail import send_mail
 from django.conf import settings
 import os
+from xml.sax.saxutils import escape
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from django.views.decorators.cache import cache_control
@@ -53,12 +54,12 @@ def laboratory_redirect(request):
     destination = '/industries/'
     if query:
         destination = f'{destination}?{query}'
-    return redirect(destination)
+    return redirect(destination, permanent=True)
 
 
 def engineering_redirect(request):
     """Keep old Engineering links useful after consolidating project support."""
-    return redirect('/industries/?industry=manufacturing#industry-paths')
+    return redirect('/industries/?industry=manufacturing#industry-paths', permanent=True)
 
 
 def contact_view(request):
@@ -75,6 +76,74 @@ def terms_view(request):
 
 def cookies_view(request):
     return render(request, 'cookies.html')
+
+
+def legacy_home_redirect(request):
+    return redirect('core:home', permanent=True)
+
+
+def legacy_about_redirect(request):
+    return redirect('core:about', permanent=True)
+
+
+def legacy_contact_redirect(request):
+    return redirect('core:contact', permanent=True)
+
+
+def legacy_laboratory_redirect(request):
+    return redirect('core:industries', permanent=True)
+
+
+def legacy_engineering_redirect(request):
+    return redirect('/industries/?industry=manufacturing#industry-paths', permanent=True)
+
+
+def legacy_privacy_redirect(request):
+    return redirect('core:privacy', permanent=True)
+
+
+def legacy_terms_redirect(request):
+    return redirect('core:terms', permanent=True)
+
+
+def legacy_cookies_redirect(request):
+    return redirect('core:cookies', permanent=True)
+
+
+@cache_control(max_age=3600, public=True)
+def robots_txt(request):
+    body = f'User-agent: *\nAllow: /\n\nSitemap: {settings.SITE_URL}/sitemap.xml\n'
+    return HttpResponse(body, content_type='text/plain; charset=utf-8')
+
+
+@cache_control(max_age=3600, public=True)
+def sitemap_xml(request):
+    """Return only canonical, public URLs that should appear in search."""
+    from django.urls import reverse
+    from products.models import Product
+
+    paths = [
+        reverse('core:home'),
+        reverse('core:about'),
+        reverse('products:catalogue'),
+        reverse('core:industries'),
+        reverse('core:contact'),
+    ]
+    paths.extend(
+        reverse('products:product-detail', kwargs={'slug': product.slug})
+        for product in Product.objects.filter(is_active=True).only('slug')
+    )
+    xml_urls = [
+        f'  <url><loc>{escape(settings.SITE_URL + path)}</loc></url>'
+        for path in paths
+    ]
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + '\n'.join(xml_urls)
+        + '\n</urlset>\n'
+    )
+    return HttpResponse(xml, content_type='application/xml; charset=utf-8')
 
 
 # ============================================================

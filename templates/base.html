@@ -8,7 +8,7 @@
   <title>{% block title %}Comeiin Works — Laboratory Equipment & Consumables{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}Explore laboratory glassware, consumables and equipment from Comeiin Works. Build your enquiry and request a quotation.{% endblock %}" />
   <meta name="robots" content="index,follow" />
-  <link rel="canonical" href="https://comeiin.co.za{{ request.path }}" />
+  <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="512x512" href="{% static 'assets/favicon.png' %}" />
@@ -28,8 +28,8 @@
 
   <!-- OG -->
   <meta property="og:site_name" content="Comeiin Works" />
-  <meta property="og:url" content="https://comeiin.co.za{{ request.path }}" />
-  <meta property="og:image" content="https://comeiin.co.za{% static 'assets/logo.jpeg' %}" />
+  <meta property="og:url" content="{{ SITE_URL }}{{ request.path }}" />
+  <meta property="og:image" content="{{ SITE_URL }}{% static 'assets/logo.jpeg' %}" />
 
   {% block extra_head %}{% endblock %}
 </head>
