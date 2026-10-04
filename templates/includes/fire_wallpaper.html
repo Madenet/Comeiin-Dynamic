@@ -1,0 +1,339 @@
+<!-- ============================================================
+     FIRE-NET ANIMATED WALLPAPER  (Vanta NET style, on fire)
+     Reusable partial included globally by the base template.
+
+     Then make sure your page's main sections have:
+         position: relative;
+         z-index: 1;
+     so they sit above the canvas instead of behind it.
+     (See ".cw-fire-content-layer" helper class below — add it to your
+     top-level section wrappers if you don't already have your own
+     z-index rules like the homepage does.)
+     ============================================================ -->
+<canvas id="cw-network-bg" aria-hidden="true"></canvas>
+
+<style>
+  #cw-network-bg {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    display: block;
+    background: #edf3fc;
+  }
+
+  /* Optional helper: add this class to any section that should sit
+     above the wallpaper instead of writing your own z-index rule. */
+  .cw-fire-content-layer {
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var canvas = document.getElementById('cw-network-bg');
+  if (!canvas) return;
+
+  var ctx = canvas.getContext('2d', { alpha: false });
+  if (!ctx) return;
+
+  /* ---------- tweak these ---------- */
+  var CONFIG = {
+    bg: '#edf3fc',        // page background (keep light so dark text stays readable)
+    maxDistance: 150,     // node-to-node link distance
+    mouseDistance: 210,   // cursor influence radius
+    minNodes: 36,
+    maxNodes: 110,
+    areaPerNode: 17000,   // bigger = fewer nodes
+    riseBias: 0.0042,     // how strongly the net drifts upward like heat
+    maxSpeed: 0.7,
+    lineStrength: 0.30,   // link opacity
+    embers: true,         // rising sparks
+    maxEmbers: 70,
+    haze: true            // soft heat glow along the bottom edge
+  };
+
+  var reduceMotion = window.matchMedia &&
+                     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var nodes = [];
+  var embers = [];
+  var mouse = { x: -9999, y: -9999, active: false };
+  var raf = null;
+  var dpr = 1;
+  var width = 0;
+  var height = 0;
+  var hazeGradient = null;
+
+  /* ---------- heat palette: deep red -> orange -> amber ---------- */
+  var PALETTE = [];
+  (function buildPalette() {
+    for (var i = 0; i < 32; i++) {
+      var h = i / 31;
+      var r = Math.round(214 + (255 - 214) * h);
+      var g = Math.round(40 + (190 - 40) * h);
+      var b = Math.round(16 + (24 - 16) * h);
+      PALETTE.push(r + ',' + g + ',' + b);
+    }
+  })();
+  function heatRGB(h) {
+    if (h < 0) h = 0; else if (h > 1) h = 1;
+    return PALETTE[Math.round(h * 31)];
+  }
+
+  function nodeCount() {
+    var n = Math.round((width * height) / CONFIG.areaPerNode);
+    return Math.max(CONFIG.minNodes, Math.min(CONFIG.maxNodes, n));
+  }
+
+  function makeNode(atBottom) {
+    var base = 0.25 + Math.random() * 0.5;
+    return {
+      x: Math.random() * width,
+      y: atBottom ? height + Math.random() * 20 : Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: -Math.random() * 0.3,
+      r: 1.2 + Math.random() * 1.7,
+      base: base,
+      heat: base,
+      phase: Math.random() * Math.PI * 2
+    };
+  }
+
+  function rebuildNodes() {
+    var target = nodeCount();
+    while (nodes.length < target) nodes.push(makeNode(false));
+    if (nodes.length > target) nodes.length = target;
+  }
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    hazeGradient = ctx.createLinearGradient(0, height, 0, height * 0.62);
+    hazeGradient.addColorStop(0, 'rgba(251,121,8,0.16)');
+    hazeGradient.addColorStop(0.5, 'rgba(255,90,20,0.05)');
+    hazeGradient.addColorStop(1, 'rgba(251,121,8,0)');
+
+    rebuildNodes();
+    if (reduceMotion) render(0);
+  }
+
+  /* ---------- drawing helpers ---------- */
+  function drawLine(a, b, dist, maxDist, strength, heat) {
+    var alpha = (1 - dist / maxDist) * strength;
+    if (alpha <= 0) return;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.lineWidth = 0.8;
+    ctx.strokeStyle = 'rgba(' + heatRGB(heat) + ',' + alpha.toFixed(3) + ')';
+    ctx.stroke();
+  }
+
+  /* ---------- simulation ---------- */
+  function updateNode(n, t) {
+    n.vy -= CONFIG.riseBias * (0.6 + n.heat);
+    n.vx += Math.sin(t * 0.0008 + n.phase) * 0.003 + (Math.random() - 0.5) * 0.012;
+
+    if (mouse.active) {
+      var dx = mouse.x - n.x;
+      var dy = mouse.y - n.y;
+      var dist2 = dx * dx + dy * dy;
+      var md = CONFIG.mouseDistance;
+      if (dist2 < md * md && dist2 > 1) {
+        var dist = Math.sqrt(dist2);
+        var k = 1 - dist / md;
+        n.vx += (dx / dist) * k * 0.012;
+        n.vy += (dy / dist) * k * 0.012;
+        n.heat = Math.min(1, n.heat + k * 0.09);
+      }
+    }
+
+    n.heat += (n.base - n.heat) * 0.02;
+
+    n.vx *= 0.99;
+    n.vy *= 0.99;
+
+    var speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+    if (speed > CONFIG.maxSpeed) {
+      n.vx = (n.vx / speed) * CONFIG.maxSpeed;
+      n.vy = (n.vy / speed) * CONFIG.maxSpeed;
+    }
+
+    n.x += n.vx;
+    n.y += n.vy;
+
+    if (n.y < -20) {
+      n.y = height + 20;
+      n.x = Math.random() * width;
+      n.heat = 1;
+    } else if (n.y > height + 40) {
+      n.y = height + 40;
+      n.vy = -Math.abs(n.vy);
+    }
+    if (n.x < -20) n.x = width + 20;
+    else if (n.x > width + 20) n.x = -20;
+  }
+
+  function spawnEmber() {
+    embers.push({
+      x: Math.random() * width,
+      y: height + 6,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: -(0.6 + Math.random() * 1.1),
+      r: 0.8 + Math.random() * 1.6,
+      life: 0,
+      ttl: 140 + Math.random() * 160,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  function updateEmbers(t) {
+    if (CONFIG.embers && embers.length < CONFIG.maxEmbers && Math.random() < 0.35) {
+      spawnEmber();
+    }
+    for (var i = embers.length - 1; i >= 0; i--) {
+      var e = embers[i];
+      e.life++;
+      e.x += e.vx + Math.sin(t * 0.002 + e.phase) * 0.3;
+      e.y += e.vy;
+      if (e.life > e.ttl || e.y < -10) embers.splice(i, 1);
+    }
+  }
+
+  /* ---------- render ---------- */
+  function render(t) {
+    ctx.fillStyle = CONFIG.bg;
+    ctx.fillRect(0, 0, width, height);
+
+    if (CONFIG.haze && hazeGradient) {
+      ctx.fillStyle = hazeGradient;
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    if (mouse.active) {
+      var g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, CONFIG.mouseDistance);
+      g.addColorStop(0, 'rgba(255,140,20,0.20)');
+      g.addColorStop(0.5, 'rgba(251,90,8,0.07)');
+      g.addColorStop(1, 'rgba(251,90,8,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(mouse.x - CONFIG.mouseDistance, mouse.y - CONFIG.mouseDistance,
+                   CONFIG.mouseDistance * 2, CONFIG.mouseDistance * 2);
+    }
+
+    var maxD2 = CONFIG.maxDistance * CONFIG.maxDistance;
+    var mD2 = CONFIG.mouseDistance * CONFIG.mouseDistance;
+
+    for (var a = 0; a < nodes.length; a++) {
+      var na = nodes[a];
+      for (var b = a + 1; b < nodes.length; b++) {
+        var nb = nodes[b];
+        var dx = na.x - nb.x;
+        var dy = na.y - nb.y;
+        var d2 = dx * dx + dy * dy;
+        if (d2 < maxD2) {
+          drawLine(na, nb, Math.sqrt(d2), CONFIG.maxDistance,
+                   CONFIG.lineStrength, (na.heat + nb.heat) / 2);
+        }
+      }
+      if (mouse.active) {
+        var mdx = na.x - mouse.x;
+        var mdy = na.y - mouse.y;
+        var md2 = mdx * mdx + mdy * mdy;
+        if (md2 < mD2) {
+          drawLine(na, mouse, Math.sqrt(md2), CONFIG.mouseDistance, 0.42, 0.95);
+        }
+      }
+    }
+
+    for (var j = 0; j < nodes.length; j++) {
+      var n = nodes[j];
+      var flicker = 0.62 + 0.28 * Math.sin(t * 0.004 + n.phase);
+      var rgb = heatRGB(n.heat);
+
+      if (n.heat > 0.55) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 4.2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + rgb + ',' + (0.10 * flicker).toFixed(3) + ')';
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + rgb + ',' + flicker.toFixed(3) + ')';
+      ctx.fill();
+    }
+
+    for (var k = 0; k < embers.length; k++) {
+      var e = embers[k];
+      var p = e.life / e.ttl;
+      var alpha = (p < 0.15 ? p / 0.15 : 1 - (p - 0.15) / 0.85);
+      var heat = 1 - p * 0.7;
+      var col = heatRGB(heat);
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r * 3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + col + ',' + (alpha * 0.10).toFixed(3) + ')';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + col + ',' + (alpha * 0.85).toFixed(3) + ')';
+      ctx.fill();
+    }
+  }
+
+  function frame(ts) {
+    for (var i = 0; i < nodes.length; i++) updateNode(nodes[i], ts);
+    updateEmbers(ts);
+    render(ts);
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (reduceMotion || raf) return;
+    raf = requestAnimationFrame(frame);
+  }
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+  }
+
+  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('mousemove', function (event) {
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+    mouse.active = true;
+  }, { passive: true });
+  window.addEventListener('mouseout', function (event) {
+    if (!event.relatedTarget) mouse.active = false;
+  });
+  window.addEventListener('touchmove', function (event) {
+    if (!event.touches || !event.touches.length) return;
+    mouse.x = event.touches[0].clientX;
+    mouse.y = event.touches[0].clientY;
+    mouse.active = true;
+  }, { passive: true });
+  window.addEventListener('touchend', function () {
+    mouse.active = false;
+  }, { passive: true });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stop(); else start();
+  });
+
+  resize();
+  if (reduceMotion) render(0); else start();
+})();
+</script>

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Project Support | Comeiin Works{% endblock %}
+{% block meta_description %}Find the right Comeiin Works support for laboratory, engineering, environmental, education and research projects.{% endblock %}
+{% block body_class %}support-page{% endblock %}
+
+{% block content %}
+<section class="support-hero section">
+  <div>
+    <p class="eyebrow"><span class="status-dot"></span> OUR LABORATORY · YOUR PROJECT</p>
+    <h1>Tell us the field.<br /><em>We’ll map the support.</em></h1>
+    <p class="intro">Comeiin Works helps science and engineering teams turn requirements into a clear sourcing and support path—from laboratory essentials to technical project needs.</p>
+  </div>
+  <div class="support-orbit" aria-hidden="true">
+    <span>PROJECT</span><i></i><b></b><em></em>
+  </div>
+</section>
+
+<section id="support-paths" class="support-finder section" aria-labelledby="support-title">
+  <div class="section-title">
+    <div>
+      <p class="eyebrow">FIND YOUR SUPPORT PATH</p>
+      <h2 id="support-title">What are you working on?</h2>
+    </div>
+    <p>Select a field to see the services and supply support most relevant to your project.</p>
+  </div>
+
+  <div class="support-filter" role="toolbar" aria-label="Filter project support">
+    <button type="button" class="is-active" data-support-filter="all" aria-pressed="true">All projects</button>
+    <button type="button" data-support-filter="laboratory" aria-pressed="false">Laboratory &amp; health</button>
+    <button type="button" data-support-filter="engineering" aria-pressed="false">Engineering &amp; industrial</button>
+    <button type="button" data-support-filter="environmental" aria-pressed="false">Environmental &amp; water</button>
+    <button type="button" data-support-filter="research" aria-pressed="false">Education &amp; research</button>
+  </div>
+
+  <div class="support-grid" aria-live="polite">
+    <article class="support-card" data-discipline="laboratory">
+      <span>01 / LABORATORY &amp; HEALTH</span>
+      <h3>Routine and specialised laboratory work</h3>
+      <p>Source equipment, consumables, glassware, PPE and liquid-handling essentials against your workflow.</p>
+      <ul><li>Requirement and specification review</li><li>Consolidated product sourcing</li><li>Quality and compatibility checks</li><li>Coordinated packing and delivery</li></ul>
+      <a href="{% url 'products:catalogue' %}">Browse laboratory supplies ↗︎</a>
+    </article>
+    <article class="support-card" data-discipline="engineering">
+      <span>02 / ENGINEERING &amp; INDUSTRIAL</span>
+      <h3>Technical projects and operational requirements</h3>
+      <p>Share a bill of quantities, specification or project brief and let our team structure the sourcing request.</p>
+      <ul><li>Specification-led enquiries</li><li>Tools, instruments and technical consumables</li><li>Alternative and availability review</li><li>Delivery coordination by project phase</li></ul>
+      <button class="quote-open text-link" type="button">Discuss an engineering project ↗︎</button>
+    </article>
+    <article class="support-card" data-discipline="environmental">
+      <span>03 / ENVIRONMENTAL &amp; WATER</span>
+      <h3>Sampling, monitoring and field support</h3>
+      <p>Build a practical request for collection, storage, preparation and testing requirements.</p>
+      <ul><li>Sample containers and handling supplies</li><li>Field and laboratory consumables</li><li>Storage and transport requirements</li><li>Project-specific sourcing support</li></ul>
+      <button class="quote-open text-link" type="button">Plan an environmental requirement ↗︎</button>
+    </article>
+    <article class="support-card" data-discipline="research">
+      <span>04 / EDUCATION &amp; RESEARCH</span>
+      <h3>Teaching, practical and research programmes</h3>
+      <p>Coordinate repeatable equipment and consumable lists for classrooms, practicals and research teams.</p>
+      <ul><li>Teaching-laboratory kits</li><li>Research consumables and equipment</li><li>Multi-item quotation support</li><li>Recurring supply planning</li></ul>
+      <button class="quote-open text-link" type="button">Build a research enquiry ↗︎</button>
+    </article>
+  </div>
+</section>
+
+<section class="support-process section">
+  <p class="eyebrow">HOW WE HELP</p>
+  <h2>One request. A clearer route to readiness.</h2>
+  <div>
+    <article><b>01</b><h3>Describe the project</h3><p>Tell us the field, outcome, quantities, deadline and any required standards.</p></article>
+    <article><b>02</b><h3>Review the requirements</h3><p>We organise the request, confirm details and identify suitable products or support.</p></article>
+    <article><b>03</b><h3>Receive a quotation</h3><p>You receive one clear response covering availability, specifications and next steps.</p></article>
+  </div>
+</section>
+
+<section class="support-cta section">
+  <div><p class="eyebrow">START WITH THE REQUIREMENT</p><h2>Your project does not need to fit a catalogue category.</h2><p>Send the brief, specification or product list. We’ll help identify the most useful next step.</p></div>
+  <button class="quote-open button orange" type="button">Request project support ↗︎</button>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const buttons = [...document.querySelectorAll('[data-support-filter]')];
+  const cards = [...document.querySelectorAll('[data-discipline]')];
+  if (!buttons.length || !cards.length) return;
+
+  function selectFilter(value, updateUrl) {
+    const valid = buttons.some((button) => button.dataset.supportFilter === value);
+    const selected = valid ? value : 'all';
+    buttons.forEach((button) => {
+      const active = button.dataset.supportFilter === selected;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    cards.forEach((card) => { card.hidden = selected !== 'all' && card.dataset.discipline !== selected; });
+    if (updateUrl) {
+      const url = new URL(location.href);
+      selected === 'all' ? url.searchParams.delete('discipline') : url.searchParams.set('discipline', selected);
+      history.replaceState({}, '', url);
+    }
+  }
+
+  buttons.forEach((button) => button.addEventListener('click', () => selectFilter(button.dataset.supportFilter, true)));
+  selectFilter(new URLSearchParams(location.search).get('discipline') || 'all', false);
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Industries We Support | Comeiin Works{% endblock %}
+{% block meta_description %}Explore laboratory equipment, consumables and sourcing support for clinical laboratories, hospitals, research, mining, hospitality, manufacturing and water processing.{% endblock %}
+{% block body_class %}support-page industries-page{% endblock %}
+
+{% block content %}
+<section class="support-hero section">
+  <div>
+    <p class="eyebrow"><span class="status-dot"></span> INDUSTRY-READY SUPPORT</p>
+    <h1>Specialised requirements.<br /><em>One responsive partner.</em></h1>
+    <p class="intro">Comeiin Works supports organisations across science, healthcare and industry with dependable equipment, consumables and specification-led sourcing.</p>
+  </div>
+  <div class="support-orbit" aria-hidden="true">
+    <span>SECTORS</span><i></i><b></b><em></em>
+  </div>
+</section>
+
+<section id="industry-paths" class="support-finder section" aria-labelledby="industries-title">
+  <div class="section-title">
+    <div>
+      <p class="eyebrow">INDUSTRIES WE SUPPORT</p>
+      <h2 id="industries-title">Find support for your sector.</h2>
+    </div>
+    <p>Select an industry to see how Comeiin Works can help structure your sourcing request.</p>
+  </div>
+
+  <div class="support-filter" role="toolbar" aria-label="Filter industries">
+    <button type="button" class="is-active" data-industry-filter="all" aria-pressed="true">All industries</button>
+    <button type="button" data-industry-filter="clinical" aria-pressed="false">Clinical Laboratories</button>
+    <button type="button" data-industry-filter="hospitals" aria-pressed="false">Hospitals</button>
+    <button type="button" data-industry-filter="academic-research" aria-pressed="false">Academic &amp; Research</button>
+    <button type="button" data-industry-filter="mining" aria-pressed="false">Mining</button>
+    <button type="button" data-industry-filter="hospitality" aria-pressed="false">Hospitality</button>
+    <button type="button" data-industry-filter="manufacturing" aria-pressed="false">Manufacturing</button>
+    <button type="button" data-industry-filter="water-processing" aria-pressed="false">Water Processing</button>
+  </div>
+
+  <div class="support-grid industries-grid" aria-live="polite">
+    <article class="support-card" data-industry="clinical">
+      <img class="support-card-image" src="{% static 'assets/industries/01-clinical-laboratories.jpg' %}" alt="Clinical laboratory scientist preparing diagnostic samples" loading="lazy" decoding="async" width="1200" height="800" />
+      <div class="support-card-body">
+        <span>01 / CLINICAL LABORATORIES</span>
+        <h3>Reliable essentials for diagnostic workflows</h3>
+        <p>Source equipment and routine consumables for sample collection, preparation, analysis and storage.</p>
+        <ul><li>Specimen containers and collection supplies</li><li>Microscopy and sample-preparation essentials</li><li>Liquid handling and laboratory plasticware</li><li>Consolidated recurring requirements</li></ul>
+        <button class="quote-open text-link" type="button">Request clinical laboratory supplies ↗︎</button>
+      </div>
+    </article>
+    <article class="support-card" data-industry="hospitals">
+      <img class="support-card-image" src="{% static 'assets/industries/02-hospitals.jpg' %}" alt="Hospital healthcare team reviewing clinical supplies" loading="lazy" decoding="async" width="1200" height="800" />
+      <div class="support-card-body">
+        <span>02 / HOSPITALS</span>
+        <h3>Responsive supply support for healthcare teams</h3>
+        <p>Coordinate laboratory, diagnostic and general-use requirements across hospital departments and facilities.</p>
+        <ul><li>Laboratory equipment and consumables</li><li>PPE and clinical support products</li><li>Cold-chain monitoring essentials</li><li>Department and facility-wide quotations</li></ul>
+        <button class="quote-open text-link" type="button">Discuss hospital requirements ↗︎</button>
+      </div>
+    </article>
+    <article class="support-card" data-industry="academic-research">
+      <img class="support-card-image" src="{% static 'assets/industries/03-academic-research.jpg' %}" alt="Academic research team working together at a microscope" loading="lazy" decoding="async" width="1200" height="800" />
+      <div class="support-card-body">
+        <span>03 / ACADEMIC &amp; RESEARCH FACILITIES</span>
+        <h3>Practical, teaching and research readiness</h3>
+        <p>Build repeatable equipment and consumable lists for classrooms, teaching laboratories and research teams.</p>
+        <ul><li>Teaching laboratory kits</li><li>Research equipment and consumables</li><li>Multi-item quotation support</li><li>Recurring supply planning</li></ul>
+        <button class="quote-open text-link" type="button">Build an academic or research enquiry ↗︎</button>
+      </div>
+    </article>
+    <article class="support-card" data-industry="mining">
+      <img class="support-card-image" src="{% static 'assets/industries/04-mining.jpg' %}" alt="Mining specialists collecting and documenting rock samples" loading="lazy" decoding="async" width="1200" height="800" />
+      <div class="support-card-body">
+        <span>04 / MINING</span>
+        <h3>Sampling and testing supplies for demanding sites</h3>
+        <p>Support field and laboratory teams with products suited to collection, preparation, testing and quality control.</p>
+        <ul><li>Sample collection and storage products</li><li>Testing and preparation consumables</li><li>Laboratory safety equipment</li><li>Project and site delivery coordination</li></ul>
+        <button class="quote-open text-link" type="button">Plan a mining requirement ↗︎</button>
+      </div>
+    </article>
+    <article class="support-card" data-industry="hospitality">
+      <img class="support-card-image" src="{% static 'assets/industries/05-hospitality.jpg' %}" alt="Hospitality professionals performing food quality checks" loading="lazy" decoding="async" width="1200" height="800" />
+      <div class="support-card-body">
+        <span>05 / HOSPITALITY</span>
+        <h3>Hygiene, quality and operational essentials</h3>
+        <p>Source practical testing, measurement and consumable requirements for hospitality operations.</p>
+        <ul><li>Hygiene and quality-control supplies</li><li>Temperature monitoring equipment</li><li>Cleaning and handling essentials</li><li>Multi-site supply enquiries</li></ul>
+        <button class="quote-open text-link" type="button">Discuss hospitality supplies ↗︎</button>
+      </div>
+    </article>
+    <article class="support-card" data-industry="manufacturing">
+      <img class="support-card-image" src="{% static 'assets/industries/06-manufacturing.jpg' %}" alt="Manufacturing quality team measuring a machined component" loading="lazy" decoding="async" width="1200" height="800" />
+      <div class="support-card-body">
+        <span>06 / MANUFACTURING</span>
+        <h3>Quality-control and process support</h3>
+        <p>Turn technical specifications, bills of quantities and operational needs into a structured sourcing request.</p>
+        <ul><li>Quality-control laboratory supplies</li><li>Measurement and testing equipment</li><li>Technical consumables and alternatives</li><li>Phased procurement coordination</li></ul>
+        <button class="quote-open text-link" type="button">Discuss manufacturing requirements ↗︎</button>
+      </div>
+    </article>
+    <article class="support-card" data-industry="water-processing">
+      <img class="support-card-image" src="{% static 'assets/industries/07-water-processing.jpg' %}" alt="Water processing specialists testing a water sample" loading="lazy" decoding="async" width="1200" height="800" />
+      <div class="support-card-body">
+        <span>07 / WATER PROCESSING</span>
+        <h3>Sampling, monitoring and water-quality support</h3>
+        <p>Build a practical supply request for collection, preparation, monitoring and laboratory testing.</p>
+        <ul><li>Sample containers and handling supplies</li><li>Testing and liquid-handling essentials</li><li>Field and laboratory consumables</li><li>Storage and transport requirements</li></ul>
+        <button class="quote-open text-link" type="button">Plan a water-processing requirement ↗︎</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="support-process section">
+  <p class="eyebrow">HOW WE HELP</p>
+  <h2>One request. A clearer route to readiness.</h2>
+  <div>
+    <article><b>01</b><h3>Share the requirement</h3><p>Send the product list, specification, quantities, deadline and any relevant standards.</p></article>
+    <article><b>02</b><h3>Review the details</h3><p>We organise the request, confirm specifications and identify suitable products or alternatives.</p></article>
+    <article><b>03</b><h3>Receive a quotation</h3><p>You receive one clear response covering availability, specifications and next steps.</p></article>
+  </div>
+</section>
+
+<section class="support-cta section">
+  <div><p class="eyebrow">START WITH YOUR REQUIREMENT</p><h2>Need something outside the standard catalogue?</h2><p>Send the brief, specification or product list. We’ll help identify the most useful next step.</p></div>
+  <button class="quote-open button orange" type="button">Request industry support ↗︎</button>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const buttons = [...document.querySelectorAll('[data-industry-filter]')];
+  const cards = [...document.querySelectorAll('[data-industry]')];
+  if (!buttons.length || !cards.length) return;
+
+  function selectIndustry(value, updateUrl) {
+    const valid = buttons.some((button) => button.dataset.industryFilter === value);
+    const selected = valid ? value : 'all';
+    buttons.forEach((button) => {
+      const active = button.dataset.industryFilter === selected;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    cards.forEach((card) => { card.hidden = selected !== 'all' && card.dataset.industry !== selected; });
+    if (updateUrl) {
+      const url = new URL(location.href);
+      selected === 'all' ? url.searchParams.delete('industry') : url.searchParams.set('industry', selected);
+      history.replaceState({}, '', url);
+    }
+  }
+
+  buttons.forEach((button) => button.addEventListener('click', () => selectIndustry(button.dataset.industryFilter, true)));
+  selectIndustry(new URLSearchParams(location.search).get('industry') || 'all', false);
+})();
+</script>
+{% endblock %}

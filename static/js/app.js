@@ -37,7 +37,7 @@ function saveQuote() {
   } catch {}
 }
 function cardMarkup(p) {
-  return `<article class="card"><div class="card-media"><a class="card-image" href="#" data-detail="${p.id}" aria-label="View ${escapeHTML(p.name)}"><img src="${p.image}" alt="${p.imageOrigin === 'Client workbook image' ? 'Client-supplied' : 'Illustrative'} ${escapeHTML(p.name.toLowerCase())}" loading="lazy" decoding="async" width="640" height="560"></a><button class="quick-view" data-detail="${p.id}" aria-label="Quick view ${escapeHTML(p.name)}">Quick view</button></div><div class="category">${escapeHTML(p.category)}</div><h3><a href="#" data-detail="${p.id}">${escapeHTML(p.name)}</a></h3><p>${escapeHTML(p.description)}</p>${p.pack ? `<p class="pack">${escapeHTML(p.pack)}${p.variants.length ? ' · ' + escapeHTML(p.variants.join(' / ')) : ''}</p>` : ''}<div class="card-bottom"><a class="detail-link" href="#" data-detail="${p.id}">${p.kind === 'product' ? 'View product' : 'Explore range'} ↗</a><button class="add" data-detail="${p.id}" aria-label="Select ${escapeHTML(p.name)} for quote">+</button></div></article>`;
+  return `<article class="card"><div class="card-media"><a class="card-image" href="#" data-detail="${p.id}" aria-label="View ${escapeHTML(p.name)}"><img src="${p.image}" alt="${p.imageOrigin === 'Client workbook image' ? 'Client-supplied' : 'Illustrative'} ${escapeHTML(p.name.toLowerCase())}" loading="lazy" decoding="async" width="640" height="560"></a><button class="quick-view" data-detail="${p.id}" aria-label="Quick view ${escapeHTML(p.name)}">Quick view</button></div><div class="category">${escapeHTML(p.category)}</div><h3><a href="#" data-detail="${p.id}">${escapeHTML(p.name)}</a></h3><p>${escapeHTML(p.description)}</p>${p.pack ? `<p class="pack">${escapeHTML(p.pack)}${p.variants.length ? ' · ' + escapeHTML(p.variants.join(' / ')) : ''}</p>` : ''}<div class="card-bottom"><a class="detail-link" href="#" data-detail="${p.id}">${p.kind === 'product' ? 'View product' : 'Explore range'} ↗︎</a><button class="add" data-detail="${p.id}" aria-label="Select ${escapeHTML(p.name)} for quote">+</button></div></article>`;
 }
 function revealCards(container) {
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -224,29 +224,40 @@ function announce(message) {
   noticeTimer = setTimeout(() => $('#notice').classList.remove('visible'), 4000);
 }
 function closeCategories() {
-  $('#category-menu').hidden = true;
-  $('.browse-toggle').setAttribute('aria-expanded', 'false');
+  const menu = $('#category-menu');
+  const toggle = $('.browse-toggle');
+  if (menu) menu.hidden = true;
+  if (toggle) toggle.setAttribute('aria-expanded', 'false');
 }
 const categories = [...new Set(supplies.map((p) => p.category))];
-$('#category-links').innerHTML = categories
-  .map(
-    (cat) =>
-      `<a href="${CATALOGUE_URL}?category=${encodeURIComponent(cat)}#catalogue" data-browse="${escapeHTML(cat)}"><strong>${escapeHTML(cat)}</strong><span>${supplies.filter((p) => p.category === cat).length} products & ranges</span></a>`,
-  )
-  .join('');
-$('.browse-toggle').addEventListener('click', () => {
-  const expanded = $('.browse-toggle').getAttribute('aria-expanded') === 'true';
-  $('#category-menu').hidden = expanded;
-  $('.browse-toggle').setAttribute('aria-expanded', String(!expanded));
-});
-$('.menu-close').addEventListener('click', () => {
-  closeCategories();
-  $('.browse-toggle').focus();
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && !$('#category-menu').hidden) {
+const categoryLinks = $('#category-links');
+const browseToggle = $('.browse-toggle');
+const menuClose = $('.menu-close');
+if (categoryLinks) {
+  categoryLinks.innerHTML = categories
+    .map(
+      (cat) =>
+        `<a href="${CATALOGUE_URL}?category=${encodeURIComponent(cat)}#catalogue" data-browse="${escapeHTML(cat)}"><strong>${escapeHTML(cat)}</strong><span>${supplies.filter((p) => p.category === cat).length} products & ranges</span></a>`,
+    )
+    .join('');
+}
+if (browseToggle && $('#category-menu')) {
+  browseToggle.addEventListener('click', () => {
+    const expanded = browseToggle.getAttribute('aria-expanded') === 'true';
+    $('#category-menu').hidden = expanded;
+    browseToggle.setAttribute('aria-expanded', String(!expanded));
+  });
+}
+if (menuClose && browseToggle) {
+  menuClose.addEventListener('click', () => {
     closeCategories();
-    $('.browse-toggle').focus();
+    browseToggle.focus();
+  });
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && $('#category-menu') && !$('#category-menu').hidden) {
+    closeCategories();
+    browseToggle?.focus();
   }
 });
 document.addEventListener('click', (e) => {

@@ -3,6 +3,53 @@
 
 {% block title %}Comeiin Works — Laboratory Equipment & Consumables{% endblock %}
 
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://comeiin.co.za/#organization",
+      "name": "Comeiin Works",
+      "legalName": "Comeiin Works (Pty) Ltd.",
+      "url": "https://comeiin.co.za/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://comeiin.co.za{% static 'assets/pwa/icon-512.png' %}",
+        "contentUrl": "https://comeiin.co.za{% static 'assets/pwa/icon-512.png' %}",
+        "width": 512,
+        "height": 512
+      },
+      "email": "Admin@comeiin.co.za",
+      "telephone": "+27 11 238 7334",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Innovation Worx, 1 Scale End",
+        "addressLocality": "Midrand",
+        "postalCode": "1685",
+        "addressCountry": "ZA"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/in/comeiin-works-631519437/",
+        "https://www.facebook.com/profile.php?id=61594282446363",
+        "https://www.instagram.com/comeiinworks/"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://comeiin.co.za/#website",
+      "url": "https://comeiin.co.za/",
+      "name": "Comeiin Works",
+      "publisher": {
+        "@id": "https://comeiin.co.za/#organization"
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <section id="product-view" class="section" hidden></section>
 
@@ -23,7 +70,7 @@
     </p>
     <div class="hero-actions">
       <button class="quote-open button orange">
-        Request a quotation <span>↗</span>
+        Request a quotation <span>↗︎</span>
       </button>
       <a class="hero-secondary" href="{% url 'products:catalogue' %}">
         Browse the catalogue <span>→</span>
@@ -33,15 +80,41 @@
       ASTUTE <span>•</span> SWIFT <span>•</span> PASSIONATE
     </div>
   </div>
-  <figure>
-    <img src="{% static 'assets/landing-hero-v2.webp' %}"
-         alt="Professional laboratory glassware in a blue studio setting"
-         width="1600" height="900" fetchpriority="high" decoding="async" />
-    <div class="orbit" aria-hidden="true"></div>
-    <div class="image-label">
-      <span class="status-dot"></span> EQUIPPED FOR DISCOVERY
+  <figure
+    class="hero-carousel"
+    data-hero-carousel
+    aria-roledescription="carousel"
+    aria-label="Comeiin Works logistics and laboratory support"
+    tabindex="0"
+  >
+    <div class="hero-carousel-track">
+      <div class="hero-carousel-slide is-active" role="group" aria-roledescription="slide" aria-label="1 of 4: Prepared with care">
+        <img src="{% static 'assets/logistics/logistics-packing.webp' %}" alt="Comeiin Works logistics team packing laboratory equipment for delivery" width="1536" height="1024" fetchpriority="high" decoding="async" />
+      </div>
+      <div class="hero-carousel-slide" role="group" aria-roledescription="slide" aria-label="2 of 4: Coordinated delivery" aria-hidden="true">
+        <img src="{% static 'assets/logistics/logistics-receiving.webp' %}" alt="Comeiin Works coordinator reviewing a laboratory delivery with scientists" width="1536" height="1024" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-carousel-slide" role="group" aria-roledescription="slide" aria-label="3 of 4: Quality checked" aria-hidden="true">
+        <img src="{% static 'assets/logistics/logistics-quality-check.webp' %}" alt="Laboratory professionals checking equipment and samples together" width="1536" height="1024" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-carousel-slide" role="group" aria-roledescription="slide" aria-label="4 of 4: Ready for the work" aria-hidden="true">
+        <img src="{% static 'assets/logistics/logistics-lab-ready.webp' %}" alt="Scientist using a microscope in a professionally equipped laboratory" width="1536" height="1024" loading="lazy" decoding="async" />
+      </div>
     </div>
-    <figcaption>Every detail. A new possibility.</figcaption>
+    <div class="image-label">
+      <span class="status-dot"></span> FROM REQUIREMENT TO READINESS
+    </div>
+    <figcaption aria-live="off">
+      <span data-carousel-count>01 / 04</span>
+      <strong data-carousel-title>Prepared with care.</strong>
+      <small data-carousel-copy>Laboratory orders packed with purpose.</small>
+    </figcaption>
+    <div class="hero-carousel-dots" role="group" aria-label="Choose a carousel slide">
+      <button class="is-active" type="button" data-carousel-dot="0" aria-label="Show slide 1" aria-current="true"></button>
+      <button type="button" data-carousel-dot="1" aria-label="Show slide 2"></button>
+      <button type="button" data-carousel-dot="2" aria-label="Show slide 3"></button>
+      <button type="button" data-carousel-dot="3" aria-label="Show slide 4"></button>
+    </div>
   </figure>
 </section>
 
@@ -69,7 +142,7 @@
       <div>
         <h3>Equipment</h3>
         <p>Tools for a closer look.</p>
-        <span class="collection-arrow">↗</span>
+        <span class="collection-arrow">↗︎</span>
       </div>
     </a>
     <a class="discovery-card" href="{% url 'products:catalogue' %}?category=Consumables#catalogue" data-browse="Consumables">
@@ -78,7 +151,7 @@
       <div>
         <h3>Consumables</h3>
         <p>Everyday work, well supplied.</p>
-        <span class="collection-arrow">↗</span>
+        <span class="collection-arrow">↗︎</span>
       </div>
     </a>
     <a class="discovery-card" href="{% url 'products:catalogue' %}?category=Liquid%20handling#catalogue" data-browse="Liquid handling">
@@ -87,7 +160,7 @@
       <div>
         <h3>Liquid handling</h3>
         <p>From the first drop onwards.</p>
-        <span class="collection-arrow">↗</span>
+        <span class="collection-arrow">↗︎</span>
       </div>
     </a>
     <div class="finder-panel">
@@ -102,9 +175,9 @@
         </div>
       </form>
       <div class="finder-examples">
-        <button data-suggest="glass">Glassware ↗</button>
-        <button data-suggest="slides">Slides ↗</button>
-        <button data-suggest="tubes">Tubes ↗</button>
+        <button data-suggest="glass">Glassware ↗︎</button>
+        <button data-suggest="slides">Slides ↗︎</button>
+        <button data-suggest="tubes">Tubes ↗︎</button>
       </div>
       <span class="finder-caption">Your next essential is a search away.</span>
     </div>
@@ -127,10 +200,50 @@
     </div>
     <div class="manifesto-actions">
       <a class="button orange" href="{% url 'products:catalogue' %}">
-        Explore the catalogue <span>↗</span>
+        Explore the catalogue <span>↗︎</span>
       </a>
       <button class="quote-open manifesto-link">Start with your requirements →</button>
     </div>
+  </div>
+</section>
+
+<section class="project-support section" aria-labelledby="project-support-title">
+  <div class="section-title">
+    <div>
+      <p class="eyebrow">INDUSTRY SUPPORT</p>
+      <h2 id="project-support-title">Specialised sectors,<br />connected to the right support.</h2>
+    </div>
+    <p>Choose your industry to see how Comeiin can help with sourcing, specifications and dependable delivery.</p>
+  </div>
+  <div class="project-support-grid">
+    <a href="{% url 'core:industries' %}?industry=clinical#industry-paths">
+      <img src="{% static 'assets/industries/01-clinical-laboratories.jpg' %}" alt="Clinical laboratory scientist preparing diagnostic samples" loading="lazy" decoding="async" width="1200" height="800" />
+      <span class="project-support-copy"><b>01</b><strong>Clinical Laboratories</strong><span>Diagnostic workflows and routine laboratory essentials ↗︎</span></span>
+    </a>
+    <a href="{% url 'core:industries' %}?industry=hospitals#industry-paths">
+      <img src="{% static 'assets/industries/02-hospitals.jpg' %}" alt="Hospital healthcare team reviewing clinical supplies" loading="lazy" decoding="async" width="1200" height="800" />
+      <span class="project-support-copy"><b>02</b><strong>Hospitals</strong><span>Responsive support across healthcare departments ↗︎</span></span>
+    </a>
+    <a href="{% url 'core:industries' %}?industry=academic-research#industry-paths">
+      <img src="{% static 'assets/industries/03-academic-research.jpg' %}" alt="Academic research team working together at a microscope" loading="lazy" decoding="async" width="1200" height="800" />
+      <span class="project-support-copy"><b>03</b><strong>Academic &amp; Research Facilities</strong><span>Teaching, practical and research requirements ↗︎</span></span>
+    </a>
+    <a href="{% url 'core:industries' %}?industry=mining#industry-paths">
+      <img src="{% static 'assets/industries/04-mining.jpg' %}" alt="Mining specialists collecting and documenting rock samples" loading="lazy" decoding="async" width="1200" height="800" />
+      <span class="project-support-copy"><b>04</b><strong>Mining</strong><span>Sampling, preparation and testing supplies ↗︎</span></span>
+    </a>
+    <a href="{% url 'core:industries' %}?industry=hospitality#industry-paths">
+      <img src="{% static 'assets/industries/05-hospitality.jpg' %}" alt="Hospitality professionals performing food quality checks" loading="lazy" decoding="async" width="1200" height="800" />
+      <span class="project-support-copy"><b>05</b><strong>Hospitality</strong><span>Hygiene, quality and operational essentials ↗︎</span></span>
+    </a>
+    <a href="{% url 'core:industries' %}?industry=manufacturing#industry-paths">
+      <img src="{% static 'assets/industries/06-manufacturing.jpg' %}" alt="Manufacturing quality team measuring a machined component" loading="lazy" decoding="async" width="1200" height="800" />
+      <span class="project-support-copy"><b>06</b><strong>Manufacturing</strong><span>Quality-control and process support ↗︎</span></span>
+    </a>
+    <a href="{% url 'core:industries' %}?industry=water-processing#industry-paths">
+      <img src="{% static 'assets/industries/07-water-processing.jpg' %}" alt="Water processing specialists testing a water sample" loading="lazy" decoding="async" width="1200" height="800" />
+      <span class="project-support-copy"><b>07</b><strong>Water Processing</strong><span>Sampling, monitoring and water-quality support ↗︎</span></span>
+    </a>
   </div>
 </section>
 
@@ -146,25 +259,50 @@
   <div>
     <p>Comeiin Works supplies laboratory equipment and consumables for routine, clinical, educational and specialised laboratory requirements.</p>
     <p>From a single item to a complete list of essentials, share your requirements and let our team help you source the right supplies.</p>
-    <a class="text-link" href="{% url 'core:about' %}">Discover our story ↗</a>
+    <a class="home-bbbee" href="{% url 'core:about' %}#bbbee-title" aria-label="Learn about Comeiin Works' B-BBEE Level 1 contributor status">
+      <img src="{% static 'assets/bbbee-level-1-comeiin.webp' %}" alt="" width="1000" height="1000" loading="lazy" decoding="async" />
+      <span>
+        <small>B-BBEE STATUS</small>
+        <strong>Level 1 Contributor</strong>
+        <em>View our status →</em>
+      </span>
+    </a>
+    <a class="text-link" href="{% url 'core:about' %}">Discover our story ↗︎</a>
   </div>
 </section>
 
-<section id="contact" class="contact section">
-  <div>
+<section id="contact" class="contact section contact-with-map">
+  <div class="contact-intro">
     <p class="eyebrow">LET’S GET TO WORK</p>
     <h2>Your next project<br />starts with a conversation.</h2>
     <button class="quote-open button orange">
-      Request a quotation <span>↗</span>
+      Request a quotation <span>↗︎</span>
     </button>
+    <nav class="contact-socials social-links" aria-label="Comeiin Works social media">
+      <a href="https://www.linkedin.com/in/comeiin-works-631519437/" target="_blank" rel="external noopener" aria-label="Comeiin Works on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.3H3.2V21h3.3V8.3ZM4.9 3A1.9 1.9 0 1 0 5 6.8 1.9 1.9 0 0 0 4.9 3ZM21 13.7c0-3.8-2-5.6-4.7-5.6a4 4 0 0 0-3.7 2h-.1V8.3H9.3V21h3.3v-6.3c0-1.7.3-3.3 2.4-3.3s2.1 1.9 2.1 3.4V21H21v-7.3Z"/></svg></a>
+      <a href="https://www.facebook.com/profile.php?id=61594282446363" target="_blank" rel="external noopener" aria-label="Comeiin Works on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h2.8l.4-3H14V8.1c0-.9.3-1.5 1.6-1.5h1.7V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H8v3h2.6v8H14Z"/></svg></a>
+      <a href="https://www.instagram.com/comeiinworks/" target="_blank" rel="external noopener" aria-label="Comeiin Works on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 2h9.2A5.4 5.4 0 0 1 22 7.4v9.2a5.4 5.4 0 0 1-5.4 5.4H7.4A5.4 5.4 0 0 1 2 16.6V7.4A5.4 5.4 0 0 1 7.4 2Zm-.2 2A3.2 3.2 0 0 0 4 7.2v9.6A3.2 3.2 0 0 0 7.2 20h9.6a3.2 3.2 0 0 0 3.2-3.2V7.2A3.2 3.2 0 0 0 16.8 4H7.2Zm10.5 1.5a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></a>
+    </nav>
   </div>
   <div class="contact-details">
-    <a href="mailto:Admin@comeiin.co.za">Admin@comeiin.co.za ↗</a>
+    <a href="mailto:Admin@comeiin.co.za">Admin@comeiin.co.za ↗︎</a>
     <a href="tel:+27112387334">Telephone: 011 238 7334</a>
-    <p>344 Sonneblom Road<br />Country View, Midrand, 1687</p>
+    <p>Innovation Worx — 1 Scale End<br />Halfway House Estate, Midrand, 1685<br />South Africa</p>
     <a class="whatsapp" href="https://wa.me/27844106544?text=Hello%20Comeiin%20Works%2C%20I%20would%20like%20help%20with%20a%20quotation." target="_blank" rel="noopener">
-      WhatsApp: 084 410 6544 ↗
+      WhatsApp: 084 410 6544 ↗︎
     </a>
   </div>
+  <figure class="contact-map">
+    <iframe
+      title="Comeiin Works location"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3586.374915556851!2d28.125828876455756!3d-25.988533277210056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e956f7f874e469b%3A0x919116a7e6abe42d!2sComeiin%20Works!5e0!3m2!1sen!2sza!4v1789932746815!5m2!1sen!2sza"
+      width="600"
+      height="450"
+      style="border: 0"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    ></iframe>
+  </figure>
 </section>
 {% endblock %}

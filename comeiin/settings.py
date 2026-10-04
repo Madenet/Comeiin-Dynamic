@@ -25,7 +25,10 @@ SECRET_KEY = config(
     default='django-insecure-=f!6@&cm_%-)ay)n_d)p@)6c&@360bc6^@f67n1wavvxgs47$#'
 )
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+# Canonical public origin used by templates and crawler discovery.
+SITE_URL = config('SITE_URL', default='https://www.comeiin.co.za').rstrip('/')
 
 
 # ============================================================
@@ -315,6 +318,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
+                'core.context_processors.site_metadata',
             ],
         },
     },

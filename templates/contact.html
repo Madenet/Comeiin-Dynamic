@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us | Comeiin Works{% endblock %}
+{% block meta_description %}Contact Comeiin Works for laboratory equipment, consumables, science projects and quotation support in Midrand, South Africa.{% endblock %}
+{% block body_class %}contact-page{% endblock %}
+
+{% block content %}
+<section class="lab-hero">
+  <div>
+    <p class="eyebrow"><i></i> GET IN TOUCH</p>
+    <h1>Contact <em>Us</em></h1>
+    <p class="lead">Get in touch with Comeiin Works for product sourcing, quotations and support.</p>
+    <div class="lab-chips" aria-label="What we can help with">
+      <span>Product sourcing</span><span>Quotations</span><span>Support</span>
+    </div>
+  </div>
+  <div class="lab-flask" aria-hidden="true">
+    <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <defs><clipPath id="lab-glass"><path d="M78 16h44v58l52 104c8 16-3 34-21 34H47c-18 0-29-18-21-34l52-104z" /></clipPath></defs>
+      <g clip-path="url(#lab-glass)">
+        <rect x="0" y="130" width="200" height="120" fill="#fb7908" opacity="0.92" />
+        <ellipse class="lab-liquid-top" cx="100" cy="130" rx="90" ry="7" />
+        <circle class="lab-bubble" cx="80" cy="200" r="7" /><circle class="lab-bubble" cx="112" cy="205" r="5" />
+        <circle class="lab-bubble" cx="132" cy="195" r="8" /><circle class="lab-bubble" cx="96" cy="210" r="4" />
+      </g>
+      <path d="M78 16h44v58l52 104c8 16-3 34-21 34H47c-18 0-29-18-21-34l52-104z" fill="#ffffff2e" stroke="#093f96" stroke-width="5" stroke-linejoin="round" />
+      <rect x="70" y="8" width="60" height="12" rx="6" fill="#093f96" />
+      <path d="M92 40v34" stroke="#ffffff90" stroke-width="4" stroke-linecap="round" />
+    </svg>
+  </div>
+</section>
+
+<section class="lab-main">
+  <aside class="lab-aside" aria-label="Other ways to reach us">
+    <div class="lab-info dark"><small>CALL US</small><strong><a href="tel:+27112387334">011 238 7334</a></strong><p>Speak to the team about laboratory equipment and consumables.</p></div>
+    <div class="lab-info"><small>EMAIL US</small><strong><a href="mailto:Admin@comeiin.co.za">Admin@comeiin.co.za</a></strong><p>Send your enquiry or a product list and we will get back to you.</p></div>
+    <div class="lab-info"><small>WHATSAPP</small><strong><a href="https://wa.me/27844106544?text=Hello%20Comeiin%20Works%2C%20I%20would%20like%20help%20with%20a%20quotation." target="_blank" rel="noopener">084 410 6544</a></strong><p>Continue your quotation conversation with the Comeiin Works team.</p></div>
+    <div class="lab-info"><small>BROWSE FIRST</small><strong>Explore the catalogue</strong><p>Build your enquiry from our range and request a quotation. <a href="{% url 'products:catalogue' %}">Browse all products ↗︎</a></p></div>
+  </aside>
+
+  <div class="lab-card">
+    <h2>Send Us a Message</h2>
+    <p class="sub">Fields marked * are required.</p>
+    <form id="contact-form" novalidate>
+      {% csrf_token %}
+      <div class="lab-form-grid">
+        <div class="lab-field"><label for="c-name">Full Name *</label><input type="text" id="c-name" name="name" autocomplete="name" required /></div>
+        <div class="lab-field"><label for="c-email">Email *</label><input type="email" id="c-email" name="email" autocomplete="email" required /></div>
+        <div class="lab-field"><label for="c-phone">Phone</label><input type="tel" id="c-phone" name="phone" autocomplete="tel" /></div>
+        <div class="lab-field"><label for="c-company">Company</label><input type="text" id="c-company" name="company" autocomplete="organization" /></div>
+        <div class="lab-field full"><label for="c-subject">Subject</label><input type="text" id="c-subject" name="subject" /></div>
+        <div class="lab-field full"><label for="c-message">Message *</label><textarea id="c-message" name="message" required></textarea></div>
+      </div>
+      <div class="lab-actions"><button type="submit" class="lab-submit" id="contact-submit"><span>Send Message</span><span aria-hidden="true">→</span></button></div>
+      <div id="contact-message" class="form-message" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<section class="lab-map-section" aria-labelledby="lab-map-title">
+  <div class="lab-map">
+    <div class="lab-map__head"><div><small>VISIT US</small><h2 id="lab-map-title">Innovation Worx — 1 Scale End</h2><p>Halfway House Estate, Midrand, 1685, South Africa.</p></div></div>
+    <div class="lab-map__frame">
+      <iframe title="Comeiin Works location on Google Maps" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3586.374915556851!2d28.125828876455756!3d-25.988533277210056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e956f7f874e469b%3A0x919116a7e6abe42d!2sComeiin%20Works!5e0!3m2!1sen!2sza!4v1789932746815!5m2!1sen!2sza" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const form = document.getElementById('contact-form');
+  const message = document.getElementById('contact-message');
+  const submit = document.getElementById('contact-submit');
+  if (!form || !message || !submit) return;
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const payload = {
+      name: document.getElementById('c-name').value.trim(), email: document.getElementById('c-email').value.trim(),
+      phone: document.getElementById('c-phone').value.trim(), company: document.getElementById('c-company').value.trim(),
+      subject: document.getElementById('c-subject').value.trim(), message: document.getElementById('c-message').value.trim()
+    };
+    if (!payload.name || !payload.email || !payload.message) {
+      message.textContent = 'Name, email and message are required.';
+      message.className = 'form-message error';
+      return;
+    }
+    submit.disabled = true;
+    submit.firstElementChild.textContent = 'Sending…';
+    try {
+      const response = await fetch("{% url 'core:api-contact' %}", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': window.CW_CSRF, 'Accept': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.detail || 'Submission failed');
+      message.textContent = 'Thank you! Your message has been received. We will get back to you shortly.';
+      message.className = 'form-message success';
+      form.reset();
+    } catch (error) {
+      message.textContent = error.message || 'Something went wrong. Please try again.';
+      message.className = 'form-message error';
+    } finally {
+      submit.disabled = false;
+      submit.firstElementChild.textContent = 'Send Message';
+    }
+  });
+})();
+</script>
+{% endblock %}
