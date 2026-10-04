@@ -2366,6 +2366,17 @@ body > header {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  /* Override the legacy global nav rules so footer socials never become a mobile menu. */
+  position: static;
+  width: auto;
+  order: initial;
+  justify-content: flex-start;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: inherit;
 }
 .social-links a {
   display: grid;
